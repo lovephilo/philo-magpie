@@ -1,0 +1,52 @@
+# Philo for Magpie
+
+将 Philo 接入 Magpie 网关的本地 agent 插件。Magpie 管理模型入口，插件将网关地址、访问密钥和模型列表转换为 Philo 的连接配置；它不包含或安装 Philo 本体。
+
+## 安装与使用
+
+1. 先安装 Philo，并确保 `philo` 命令在运行 Magpie 的环境中可用。
+2. 执行 `magpie plugin add github:lovephilo/philo-magpie` 从本仓库安装插件。此前通过本地文件夹安装的用户，请先在 Magpie 的插件管理中移除旧条目。
+3. 在 Magpie 中配置可用的模型提供商，选择 Philo 并连接模型。保持 Magpie 网关运行。
+4. 在 Philo 中发起新任务，检查所选模型是否生效。正在进行的任务保持原来的模型。
+
+这是私有的本地集成包，不应通过 `npm install magpie-philo` 从公共 registry 安装。
+
+## 配置与数据
+
+- 显示名称由 `package.json` 的 `magpie.name` 指定，图标使用 `magpie.icon` 指向的远端 SVG。
+- 插件入口：`./agent.js`，由 `package.json` 的 `magpie.agent` 声明。
+- Philo 连接配置：`~/.philo/magpie.json`，JSON 格式；模型选择字段为 `model`。
+- 连接参数：`baseUrl` 来自 Magpie 网关的 `v1` 地址，`apiKey` 来自网关密钥，API 类型为 `openai-completions`。
+- 模型列表携带模型 ID、名称、上下文窗口、输出上限、图像支持和推理强度选项。
+- 技能目录：`~/.philo/skills`。
+
+连接配置包含网关访问密钥。不要将该配置提交到版本库或直接粘贴到日志、截图和问题报告中。
+
+## 在 Magpie 查看对话
+
+使用包含会话标识修复的 Philo 构建，并重启 Philo 的运行进程。通过 Magpie 发出的模型请求会以 `User-Agent: philo` 和 `X-Magpie-Session`（Philo 的真实会话 ID）归组，在 Magpie 对话页的网关会话中显示。仅更新此插件目录不会更新正在运行的 Philo 二进制。
+
+要查看消息正文，需在 Magpie 对话页主动开启“网关对话录制”。录制默认关闭，会保存经过网关的提示词、回复和工具结果，可能包含私人代码；只在本机保留，最多 7 天、256 MiB。插件不会自动开启录制。
+
+此集成不是本地历史导入：未经过 Magpie 的会话、旧的无会话 ID 请求，以及未录制或已过期的正文，无法由网关补回。修复后可在已有 Philo 会话里再发一条消息验证，无需删除原有会话。
+
+## 排查
+
+- **详情提示 “no README … beside its package.json”**：确认添加的是本插件目录，且其中存在此 `README.md`。若使用了复制的目录，也要同步 README，再重新打开详情。
+- **找不到 Philo**：检查 Magpie 所在环境的 PATH 是否可以找到 `philo`；添加插件不会安装该命令。
+- **没有可选模型或连接失败**：检查 Magpie 的提供商、模型列表和网关状态。README 能正常显示并不代表模型连接成功。
+
+## 维护与验证
+
+Magpie 的 `/api/plugins/page` 调用 `plugin.Readme`：本地路径和已安装的 git 插件从目标目录读取 README，不向父目录查找，也不用 `package.json` 的 `description` 代替正文。文件名大小写不敏感，优先顺序为 `README.md`、`README.markdown`、`README.txt`、`README`；正文最多读取 200 KiB，更新时间来自文件修改时间。
+
+`description` 是包的简短介绍，`magpie.agent` 是加载入口，`magpie.icon` 是图标，均不能替代此文档。保留本地包的 `private: true`，不为修复详情页添加虚构的发布者或公共发布信息。
+
+Magpie 自身的 README 读取契约可在其目录验证：
+
+```sh
+cd /path/to/magpie
+GOWORK=off go test ./internal/plugin -run '^TestReadmeFromFolder$' -count=1
+```
+
+此检查不启动 Philo、不连接模型，也不修改用户配置。
