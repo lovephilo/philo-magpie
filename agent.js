@@ -1,9 +1,7 @@
-import manifest from "./package.json" with { type: "json" }
-
 export const agent = {
   id: "philo",
-  name: manifest.magpie.name,
-  icon: manifest.magpie.icon,
+  name: "Philo",
+  icon: "https://philo.love/philo.svg",
   bin: "philo",
   config: "~/.philo/magpie.json",
   format: "json",

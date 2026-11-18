@@ -13,7 +13,7 @@
 
 ## 配置与数据
 
-- 显示名称由 `package.json` 的 `magpie.name` 指定，图标使用 `magpie.icon` 指向的远端 SVG。
+- 插件和 agent 均显示为 Philo。修改名称或图标时，请同步更新 `package.json` 的 `magpie` 字段和 `agent.js` 的 `agent` 对象。Magpie 的 agent 加载器不支持直接导入 JSON。
 - 插件入口：`./agent.js`，由 `package.json` 的 `magpie.agent` 声明。
 - Philo 连接配置：`~/.philo/magpie.json`，JSON 格式；模型选择字段为 `model`。
 - 连接参数：`baseUrl` 来自 Magpie 网关的 `v1` 地址，`apiKey` 来自网关密钥，API 类型为 `openai-completions`。
