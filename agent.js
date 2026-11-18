@@ -7,7 +7,11 @@ export const agent = {
   format: "json",
   model: "model",
   ua: ["philo"],
-  library: { skills: "~/.philo/skills" },
+  library: {
+    skills: "~/.philo/skills",
+    mcp: "~/.philo/magpie-mcp.json",
+    mcpFormat: "claude",
+  },
   notice: "新的任务会使用这份模型。正在进行的任务保持原来的模型。",
 }
 

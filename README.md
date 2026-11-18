@@ -11,6 +11,15 @@
 
 这是私有的本地集成包，不应通过 `npm install magpie-philo` 从公共 registry 安装。
 
+## MCP 和 Skills
+
+在 Magpie 的 Library 中把 MCP 服务或技能分配给 Philo。包含此功能的 Philo 构建会自动接入分配结果，使用任意模型的会话均可调用。
+
+- **MCP** 支持逐个直连，也支持 Magpie 的 MCP 路由。开启路由时，标为直连的服务可以同时使用。Magpie 通过 `~/.philo/magpie-mcp.json` 同步配置，Philo 会刷新分配来的工具。
+- **Skills** 通过 `~/.philo/skills` 同步。开启 Skill 路由时，Philo 向模型提供 `magpie-skills` 索引，也可以用 `@` 按名字选中技能。
+
+如果使用自定义 `PHILO_HOME`，可以在 Philo 的 `magpie` 插件设置中用 `mcpPath` 指向实际导出文件。MCP 导出文件可能包含服务凭据，请保存在本机。
+
 ## 配置与数据
 
 - 插件和 agent 均显示为 Philo。修改名称或图标时，请同步更新 `package.json` 的 `magpie` 字段和 `agent.js` 的 `agent` 对象。Magpie 的 agent 加载器不支持直接导入 JSON。
