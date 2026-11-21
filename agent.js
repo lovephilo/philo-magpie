@@ -6,6 +6,7 @@ export const agent = {
   config: "~/.philo/magpie.json",
   format: "json",
   model: "model",
+  effort: true,
   ua: ["philo"],
   library: {
     skills: "~/.philo/skills",

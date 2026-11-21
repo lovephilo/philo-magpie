@@ -6,7 +6,7 @@
 
 1. 先安装 Philo，并确保 `philo` 命令在运行 Magpie 的环境中可用。
 2. 执行 `magpie plugin add github:lovephilo/philo-magpie` 从本仓库安装插件。此前通过本地文件夹安装的用户，请先在 Magpie 的插件管理中移除旧条目。
-3. 在 Magpie 中配置可用的模型提供商，选择 Philo 并连接模型。保持 Magpie 网关运行。
+3. 在 Magpie 中配置模型提供商，然后在 Agents 页为 Philo 选择模型并连接。选中支持推理的模型后，可以调整思考深度（Effort）。速度（Speed）可选 Default、Fast 或 Ultrafast。保持 Magpie 网关运行。
 4. 在 Philo 中发起新任务，检查所选模型是否生效。正在进行的任务保持原来的模型。
 
 这是私有的本地集成包，不应通过 `npm install magpie-philo` 从公共 registry 安装。
@@ -26,7 +26,7 @@
 - 插件入口：`./agent.js`，由 `package.json` 的 `magpie.agent` 声明。
 - Philo 连接配置：`~/.philo/magpie.json`，JSON 格式；模型选择字段为 `model`。
 - 连接参数：`baseUrl` 来自 Magpie 网关的 `v1` 地址，`apiKey` 来自网关密钥，API 类型为 `openai-completions`。
-- 模型列表携带模型 ID、名称、上下文窗口、输出上限、图像支持和推理强度选项。
+- `~/.philo/magpie.json` 中的 `models[].efforts` 列出该模型支持的思考深度。Agents 页选中的深度由 Magpie 保存在自己的 `settings.json` 的 `agentEfforts` 中，速度选择由 `fastPicks` 和 `ultraPicks` 记录。网关在转发 Philo 请求时应用这些设置。
 - 技能目录：`~/.philo/skills`。
 
 连接配置包含网关访问密钥。不要将该配置提交到版本库或直接粘贴到日志、截图和问题报告中。
