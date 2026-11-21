@@ -6,8 +6,8 @@
 
 1. 先安装 Philo，并确保 `philo` 命令在运行 Magpie 的环境中可用。
 2. 执行 `magpie plugin add github:lovephilo/philo-magpie` 从本仓库安装插件。此前通过本地文件夹安装的用户，请先在 Magpie 的插件管理中移除旧条目。
-3. 在 Magpie 中配置模型提供商，然后在 Agents 页为 Philo 选择模型并连接。选中支持推理的模型后，可以调整思考深度（Effort）。速度（Speed）可选 Default、Fast 或 Ultrafast。保持 Magpie 网关运行。
-4. 在 Philo 中发起新任务，检查所选模型是否生效。正在进行的任务保持原来的模型。
+3. 在 Magpie 中配置模型提供商，然后在 Agents 页为 Philo 选择默认模型并连接。保持 Magpie 网关运行。
+4. 如需为默认模型指定默认思考深度，可直接编辑 `~/.philo/magpie.json` 在顶层添加或修改 `"effort"`（如 `"high"`），Magpie 切换模型或刷新密钥时不会覆盖该字段。Philo 热加载后立即应用于新会话和未锁定的已有会话，已接受的任务保持原有配置。
 
 这是私有的本地集成包，不应通过 `npm install magpie-philo` 从公共 registry 安装。
 
@@ -24,9 +24,9 @@
 
 - 插件和 agent 均显示为 Philo。修改名称或图标时，请同步更新 `package.json` 的 `magpie` 字段和 `agent.js` 的 `agent` 对象。Magpie 的 agent 加载器不支持直接导入 JSON。
 - 插件入口：`./agent.js`，由 `package.json` 的 `magpie.agent` 声明。
-- Philo 连接配置：`~/.philo/magpie.json`，JSON 格式；模型选择字段为 `model`。
+- Philo 从 `~/.philo/magpie.json` 的顶层读取会话默认值：`model` 由 Magpie 写入，`effort` 可手动配置为默认思考深度（如 `"high"`）；删除或留空 `effort` 会恢复 Philo 自身默认。
 - 连接参数：`baseUrl` 来自 Magpie 网关的 `v1` 地址，`apiKey` 来自网关密钥，API 类型为 `openai-completions`。
-- `~/.philo/magpie.json` 中的 `models[].efforts` 列出该模型支持的思考深度。Agents 页选中的深度由 Magpie 保存在自己的 `settings.json` 的 `agentEfforts` 中，速度选择由 `fastPicks` 和 `ultraPicks` 记录。网关在转发 Philo 请求时应用这些设置。
+- `models[].efforts` 列出各模型支持的思考深度。插件未开启 Magpie 的网关级 `effort: true`，避免网关覆盖 Philo 会话内自选的思考深度。
 - 技能目录：`~/.philo/skills`。
 
 连接配置包含网关访问密钥。不要将该配置提交到版本库或直接粘贴到日志、截图和问题报告中。

@@ -6,14 +6,13 @@ export const agent = {
   config: "~/.philo/magpie.json",
   format: "json",
   model: "model",
-  effort: true,
   ua: ["philo"],
   library: {
     skills: "~/.philo/skills",
     mcp: "~/.philo/magpie-mcp.json",
     mcpFormat: "claude",
   },
-  notice: "新的任务会使用这份模型。正在进行的任务保持原来的模型。",
+  notice: "跟随默认模型的会话会自动更新，新任务使用更新后的配置。",
 }
 
 export function connect({ gateway, models }) {
